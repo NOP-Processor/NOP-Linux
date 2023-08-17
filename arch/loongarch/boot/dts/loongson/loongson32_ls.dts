@@ -1,0 +1,118 @@
+/dts-v1/;
+/{
+        model = "loongson,generic";
+        compatible = "loongson,loongson3";
+        #address-cells = <1>;
+        #size-cells = <1>;
+
+        aliases {
+                serial0 = &cpu_uart0;
+        };
+
+        chosen {
+                stdout-path = "serial0:115200n8";
+                bootargs = "earlycon";
+        };
+
+
+	extioiic: interrupt-controller@0x1fe11600 {
+                compatible = "loongson,extioi-interrupt-controller";
+                interrupt-controller;
+                #interrupt-cells = <1>;
+                interrupt-parent = <&cpuic>;
+                interrupts = <3>;
+                interrupt-names = "cascade";
+                vec_count=<128>;
+                misc_func=<0x100>;
+                eio_en_off=<27>;
+        };
+
+    memory {
+        name = "memory";
+        device_type = "memory";
+        reg =  <0x00000000  0x08000000>;
+        };
+
+	cpuic: interrupt-controller {
+	compatible = "loongson,cpu-interrupt-controller";
+        interrupt-controller;
+		#interrupt-cells = <1>;
+	};
+
+	soc {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <0x10000000 0x10000000 0x10000000 >;
+
+        cpu_uart0: serial@0x1fe001e0 {
+                        compatible = "ns16550a";
+                        reg = < 0x1fe001e0  0x10>;
+                        clock-frequency = <33000000>;
+                        interrupt-parent = <&cpuic>;
+                        interrupts = <2>;
+                        no-loopback-test;
+                };
+
+        gmac0: dmfe@0x1ff00000{
+                        compatible = "dmfe";
+                        reg = <0x1ff00000 0x10000>;
+                        interrupt-parent = <&cpuic>;
+                        interrupts = <3>;
+                        interrupt-names = "macirq";
+                        mac-address = [ 64 48 48 48 48 60 ];
+                        phy-mode = "rgmii";
+                        bus_id = <0x0>;
+                        phy_addr = <0xffffffff>;
+                        dma-mask = <0xffffffff 0xffffffff>;
+                };
+
+        nand@0x1fe78000{
+             #address-cells = <1>;
+             #size-cells = <1>;
+             compatible = "ls1a-nand";
+             reg = <0x1fe78000 0x4000
+                 0x1fd01160 0x0>;
+             interrupt-parent = <&cpuic>;
+             interrupts = <4>;
+             interrupt-names = "nand_irq";
+
+             number-of-parts = <0x2>;
+             partition@0 {
+                 label = "kernel_partition";
+                 reg = <0x0000000 0x01400000>;
+             };
+
+             partition@0x01400000 {
+                 label = "os_partition";
+                 reg = <0x01400000 0x0>;
+             };
+         };
+
+        lcd0: lcd@1d030000 {
+			compatible = "lcd,nt35510";
+			reg = <0x1d030000 0x1000>;
+		};
+
+        ps2: ps2@1d020000 {
+			compatible = "altr,ps2-1.0";
+			reg = <0x1d020000 0x1000>;
+			interrupt-parent = <&cpuic>;
+			interrupts = <5>;
+		};
+
+        axi_tft_0: axi_tft@1d010000 {
+			compatible = "xlnx,xps-tft-1.00.accl";
+			reg = <0x1d010000 0x1000>, 
+				<0x1d050000 0x1000>, 
+				<0x1d060000 0x1000>, 
+				<0x1fd0dead 0x4>; 
+			xlnx,dcr-splb-slave-if = <0x1>;
+			resolution = <640 480>; 
+			virtual-resolution = <1024 480>; 
+			phys-size = <640 480>;
+		};
+
+    };
+};
+

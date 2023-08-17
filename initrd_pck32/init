@@ -1,0 +1,6 @@
+#!/bin/sh
+mount -t devtmpfs none /dev 
+mount -t proc proc proc
+mount -t sysfs sys sys
+exec 1>/dev/console 2>/dev/console </dev/console
+exec /sbin/init

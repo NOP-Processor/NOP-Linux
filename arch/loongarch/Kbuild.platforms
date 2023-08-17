@@ -1,0 +1,7 @@
+# All platforms listed in alphabetic order
+
+platforms += loongson64
+platforms += loongson32
+
+# include the platform specific files
+include $(patsubst %, $(srctree)/arch/loongarch/%/Platform, $(platforms))

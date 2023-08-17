@@ -1,0 +1,562 @@
+# SPDX-License-Identifier: GPL-2.0
+config LOONGARCH
+	bool
+	default y
+	select ACPI_SYSTEM_POWER_STATES_SUPPORT	if ACPI
+	select ARCH_BINFMT_ELF_STATE
+	select ARCH_DISCARD_MEMBLOCK
+	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+	select ARCH_HAS_ELF_RANDOMIZE
+	select ARCH_HAS_PTE_SPECIAL if !32BIT
+	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+	select ARCH_INLINE_READ_LOCK if !PREEMPTION
+	select ARCH_INLINE_READ_LOCK_BH if !PREEMPTION
+	select ARCH_INLINE_READ_LOCK_IRQ if !PREEMPTION
+	select ARCH_INLINE_READ_LOCK_IRQSAVE if !PREEMPTION
+	select ARCH_INLINE_READ_UNLOCK if !PREEMPTION
+	select ARCH_INLINE_READ_UNLOCK_BH if !PREEMPTION
+	select ARCH_INLINE_READ_UNLOCK_IRQ if !PREEMPTION
+	select ARCH_INLINE_READ_UNLOCK_IRQRESTORE if !PREEMPTION
+	select ARCH_INLINE_WRITE_LOCK if !PREEMPTION
+	select ARCH_INLINE_WRITE_LOCK_BH if !PREEMPTION
+	select ARCH_INLINE_WRITE_LOCK_IRQ if !PREEMPTION
+	select ARCH_INLINE_WRITE_LOCK_IRQSAVE if !PREEMPTION
+	select ARCH_INLINE_WRITE_UNLOCK if !PREEMPTION
+	select ARCH_INLINE_WRITE_UNLOCK_BH if !PREEMPTION
+	select ARCH_INLINE_WRITE_UNLOCK_IRQ if !PREEMPTION
+	select ARCH_INLINE_WRITE_UNLOCK_IRQRESTORE if !PREEMPTION
+	select ARCH_INLINE_SPIN_TRYLOCK if !PREEMPTION
+	select ARCH_INLINE_SPIN_TRYLOCK_BH if !PREEMPTION
+	select ARCH_INLINE_SPIN_LOCK if !PREEMPTION
+	select ARCH_INLINE_SPIN_LOCK_BH if !PREEMPTION
+	select ARCH_INLINE_SPIN_LOCK_IRQ if !PREEMPTION
+	select ARCH_INLINE_SPIN_LOCK_IRQSAVE if !PREEMPTION
+	select ARCH_INLINE_SPIN_UNLOCK if !PREEMPTION
+	select ARCH_INLINE_SPIN_UNLOCK_BH if !PREEMPTION
+	select ARCH_INLINE_SPIN_UNLOCK_IRQ if !PREEMPTION
+	select ARCH_INLINE_SPIN_UNLOCK_IRQRESTORE if !PREEMPTION
+	select ARCH_SUPPORTS_ACPI
+	select ARCH_SUPPORTS_HUGETLBFS
+	#select ARCH_SUPPORTS_NUMA_BALANCING
+	select ARCH_USE_BUILTIN_BSWAP
+	select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
+	select ARCH_USE_QUEUED_RWLOCKS
+	select ARCH_USE_QUEUED_SPINLOCKS
+	select BUILDTIME_TABLE_SORT
+	select GENERIC_ATOMIC64 if !64BIT
+	select GENERIC_CLOCKEVENTS
+	select GENERIC_CMOS_UPDATE
+	select GENERIC_CPU_AUTOPROBE
+	select GENERIC_GETTIMEOFDAY
+	select GENERIC_IOMAP
+	select GENERIC_IRQ_PROBE
+	select GENERIC_IRQ_SHOW
+	select GENERIC_LIB_ASHLDI3
+	select GENERIC_LIB_ASHRDI3
+	select GENERIC_LIB_CMPDI2
+	select GENERIC_LIB_LSHRDI3
+	select GENERIC_LIB_UCMPDI2
+	select GENERIC_SMP_IDLE_THREAD
+	select GENERIC_STRNCPY_FROM_USER
+	select GENERIC_STRNLEN_USER
+	select GENERIC_TIME_VSYSCALL
+	select HANDLE_DOMAIN_IRQ
+	select HAVE_ARCH_AUDITSYSCALL
+	select HAVE_ARCH_COMPILER_H
+	select HAVE_ARCH_MMAP_RND_BITS if MMU
+	select HAVE_ARCH_SECCOMP_FILTER
+	select HAVE_ARCH_TRACEHOOK
+	select HAVE_ARCH_TRANSPARENT_HUGEPAGE if CPU_SUPPORTS_HUGEPAGES && 64BIT
+	select HAVE_ASM_MODVERSIONS
+	select HAVE_CONTEXT_TRACKING
+	select HAVE_COPY_THREAD_TLS
+	select HAVE_DEBUG_KMEMLEAK
+	select HAVE_DEBUG_STACKOVERFLOW
+	select HAVE_DMA_CONTIGUOUS
+	select HAVE_EXIT_THREAD
+	select HAVE_FAST_GUP
+	select HAVE_FUTEX_CMPXCHG if FUTEX
+	select HAVE_GENERIC_VDSO
+	select HAVE_IOREMAP_PROT
+	select HAVE_IRQ_EXIT_ON_IRQ_STACK
+	select HAVE_IRQ_TIME_ACCOUNTING
+	select HAVE_MEMBLOCK
+	select HAVE_MEMBLOCK_NODE_MAP
+	select HAVE_MOD_ARCH_SPECIFIC
+	select HAVE_NMI
+	select HAVE_PERF_EVENTS
+	select HAVE_REGS_AND_STACK_ACCESS_API
+	select HAVE_RSEQ
+	select HAVE_SYSCALL_TRACEPOINTS
+	select HAVE_VIRT_CPU_ACCOUNTING_GEN if 64BIT || !SMP
+	select IRQ_FORCED_THREADING
+	select MODULES_USE_ELF_RELA if MODULES && 64BIT
+	select MODULES_USE_ELF_REL if MODULES
+	select PCI_DOMAINS if PCI
+	select PCI_MSI_ARCH_FALLBACKS
+	select PERF_USE_VMALLOC
+	select RTC_LIB
+	select SYSCTL_EXCEPTION_TRACE
+
+menu "Machine selection"
+
+choice
+	prompt "System type"
+	default MACH_LOONGSON32
+
+config MACH_LOONGSON64
+	bool "Loongson 64-bit family of machines"
+	select ARCH_SPARSEMEM_ENABLE
+	select ARCH_MIGHT_HAVE_PC_PARPORT
+	select ARCH_MIGHT_HAVE_PC_SERIO
+	select HAVE_PCI
+	select PCI
+	select IRQ_LOONGARCH_CPU
+	select NR_CPUS_DEFAULT_4
+	select SPARSE_IRQ
+	select SYS_HAS_CPU_LOONGSON64
+	select SYS_SUPPORTS_SMP
+	select SYS_SUPPORTS_HOTPLUG_CPU
+	select SYS_SUPPORTS_NUMA
+	select SYS_SUPPORTS_64BIT_KERNEL
+	select ZONE_DMA32
+	help
+	  This enables the support of Loongson 64-bit family of machines. These
+	  machines are based on new Loongson-3 processors (Old Loongson is MIPS
+	  compatible, while new Loongson is based on LoongArch ISA).
+
+config MACH_LOONGSON32
+	bool "Loongson 32-bit family of machines"
+	select IRQ_LOONGARCH_CPU
+	select NR_CPUS_DEFAULT_1
+#	select SYS_SUPPORTS_HIGHMEM
+	select SYS_HAS_CPU_LOONGSON32
+	select SYS_SUPPORTS_32BIT_KERNEL
+	select ZONE_DMA32
+#	select PCI
+#	select HAVE_PCI
+	help
+	  This enables the support of Loongson 32-bit family of machines. These
+	  machines are based on new Loongson-3 processors.
+endchoice
+
+source "arch/loongarch/loongson32/Kconfig"
+
+endmenu
+
+if 32BIT
+config SYS_HAS_EARLY_PRINTK
+        bool
+endif
+
+config GENERIC_HWEIGHT
+	bool
+	default y
+
+config GENERIC_CALIBRATE_DELAY
+	bool
+	default y
+
+config SCHED_OMIT_FRAME_POINTER
+	bool
+	default y
+
+config SYS_SUPPORTS_HOTPLUG_CPU
+	bool
+
+
+config GENERIC_CSUM
+	def_bool y
+
+config L1_CACHE_SHIFT
+	int
+	default "6"
+
+menu "CPU selection"
+choice
+	prompt "CPU type"
+	default CPU_LOONGSON32
+
+config CPU_LOONGSON64
+	bool "Loongson 64-bit CPU"
+	depends on SYS_HAS_CPU_LOONGSON64
+	select ARCH_HAS_PHYS_TO_DMA
+	select CPU_SUPPORTS_64BIT_KERNEL
+	select GPIOLIB
+	select SWIOTLB
+	select ARCH_SUPPORTS_ATOMIC_RMW
+	help
+	  The Loongson 64-bit processor implements the LoongArch64 (the 64-bit
+	  version of LoongArch) instruction set.
+
+config CPU_LOONGSON32
+	bool "Loongson 32-bit CPU"
+	depends on SYS_HAS_CPU_LOONGSON32
+	#select ARCH_HAS_PHYS_TO_DMA
+	select CPU_SUPPORTS_32BIT_KERNEL
+	#select SWIOTLB
+	select ARCH_SUPPORTS_ATOMIC_RMW
+	help
+	  The Loongson 32-bit processor implements the LoongArch32 (the 32-bit
+	  version of LoongArch) instruction set.
+
+endchoice
+config SYS_HAS_CPU_LOONGSON64
+	bool
+
+config SYS_HAS_CPU_LOONGSON32
+	bool
+
+endmenu
+config SYS_SUPPORTS_32BIT_KERNEL
+	bool
+
+config SYS_SUPPORTS_64BIT_KERNEL
+	bool
+
+config CPU_SUPPORTS_32BIT_KERNEL
+	bool
+
+config CPU_SUPPORTS_64BIT_KERNEL
+	bool
+
+menu "Kernel type"
+
+choice
+	prompt "Kernel code model"
+	help
+	  You should only select this option if you have a workload that
+	  actually benefits from 64-bit processing or if your machine has
+	  large memory.  You will only be presented a single option in this
+	  menu if your system does not support both 32-bit and 64-bit kernels.
+
+config 32BIT
+	bool "32-bit kernel"
+	depends on CPU_SUPPORTS_32BIT_KERNEL && SYS_SUPPORTS_32BIT_KERNEL
+	help
+	  Select this option if you want to build a 32-bit kernel.
+
+config 64BIT
+	bool "64-bit kernel"
+	depends on CPU_SUPPORTS_64BIT_KERNEL && SYS_SUPPORTS_64BIT_KERNEL
+	help
+	  Select this option if you want to build a 64-bit kernel.
+
+endchoice
+choice
+	prompt "Kernel page size"
+	default PAGE_SIZE_16KB if MACH_LOONGSON64
+	default PAGE_SIZE_4KB if MACH_LOONGSON32
+config PAGE_SIZE_4KB
+	bool "4kB"
+	help
+	  This option selects the standard 4kB Linux page size.
+
+config PAGE_SIZE_16KB
+	bool "16kB"
+	help
+	  This option selects the standard 16kB Linux page size.
+
+config PAGE_SIZE_64KB
+	bool "64kB"
+	help
+	  This option selects the standard 64kB Linux page size.
+
+endchoice
+
+choice
+	prompt "Virtual memory address space bits"
+	default VA_BITS_40
+	help
+	  Allows choosing one of multiple possible virtual memory
+	  address space bits for applications. The level of page
+	  translation table is determined by a combination of page
+	  size and virtual memory address space bits.
+
+config VA_BITS_40
+	bool "40-bits"
+	depends on 64BIT
+	help
+	  Support a maximum at least 40 bits of application virtual memory.
+
+config VA_BITS_48
+	bool "48-bits"
+	depends on 64BIT
+	help
+	  Support a maximum at least 48 bits of application virtual memory.
+
+endchoice
+
+config FORCE_MAX_ZONEORDER
+	int "Maximum zone order"
+	range 14 64 if PAGE_SIZE_64KB
+	default "14" if PAGE_SIZE_64KB
+	range 12 64 if PAGE_SIZE_16KB
+	default "12" if PAGE_SIZE_16KB
+	range 11 64
+	default "11"
+	help
+	  The kernel memory allocator divides physically contiguous memory
+	  blocks into "zones", where each zone is a power of two number of
+	  pages.  This option selects the largest power of two that the kernel
+	  keeps in the memory allocator.  If you need to allocate very large
+	  blocks of physically contiguous memory, then you may need to
+	  increase this value.
+
+	  This config option is actually maximum order plus one. For example,
+	  a value of 11 means that the largest free memory block is 2^10 pages.
+
+	  The page size is not necessarily 4KB.  Keep this in mind
+	  when choosing a value for this option.
+
+config CPU_HAS_PREFETCH
+	bool
+	default y
+
+config CPU_HAS_FPU
+	bool
+	default y
+
+config ARCH_SELECT_MEMORY_MODEL
+	def_bool y
+
+config ARCH_FLATMEM_ENABLE
+	def_bool y
+	depends on !NUMA
+
+config ARCH_SPARSEMEM_ENABLE
+	def_bool y
+	select SPARSEMEM_STATIC
+	help
+	  Say Y to support efficient handling of sparse physical memory,
+	  for architectures which are either NUMA (Non-Uniform Memory Access)
+	  or have huge holes in the physical address space for other reasons.
+	  See <file:Documentation/vm/numa.rst> for more.
+
+config NUMA
+	bool "NUMA Support"
+	depends on SYS_SUPPORTS_NUMA
+	select ACPI_NUMA if ACPI
+	help
+	  Say Y to compile the kernel to support NUMA (Non-Uniform Memory
+	  Access).  This option improves performance on systems with more
+	  than two nodes; on two node systems it is generally better to
+	  leave it disabled; on single node systems disable this option
+	  disabled.
+
+config SYS_SUPPORTS_NUMA
+	bool
+
+config NODES_SHIFT
+	int
+	default "6"
+	depends on NUMA
+
+config USE_PERCPU_NUMA_NODE_ID
+	def_bool y
+	depends on NUMA
+
+config HAVE_SETUP_PER_CPU_AREA
+	def_bool y
+	depends on NUMA
+
+config NEED_PER_CPU_EMBED_FIRST_CHUNK
+	def_bool y
+	depends on NUMA
+
+config NEED_PER_CPU_PAGE_FIRST_CHUNK
+	def_bool y
+	depends on NUMA
+
+config DMI
+	bool "Enable DMI scanning"
+	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+	default y
+	help
+	  Enabled scanning of DMI to identify machine quirks. Say Y
+	  here unless you have verified that your setup is not
+	  affected by entries in the DMI blacklist. Required by PNP
+	  BIOS code.
+
+config EFI
+	bool "EFI runtime service support"
+	select UCS2_STRING
+	select EFI_RUNTIME_WRAPPERS
+	help
+	  This enables the kernel to use EFI runtime services that are
+	  available (such as the EFI variable services).
+
+	  This option is only useful on systems that have EFI firmware.
+	  In addition, you should use the latest ELILO loader available
+	  at <http://elilo.sourceforge.net> in order to take advantage
+	  of EFI runtime services. However, even with this option, the
+	  resultant kernel should continue to boot on existing non-EFI
+	  platforms.
+
+config SMP
+	bool "Multi-Processing support"
+	depends on SYS_SUPPORTS_SMP
+	help
+	  This enables support for systems with more than one CPU. If you have
+	  a system with only one CPU, say N. If you have a system with more
+	  than one CPU, say Y.
+
+	  If you say N here, the kernel will run on uni- and multiprocessor
+	  machines, but will use only one CPU of a multiprocessor machine. If
+	  you say Y here, the kernel will run on many, but not all,
+	  uniprocessor machines. On a uniprocessor machine, the kernel
+	  will run faster if you say N here.
+
+	  People using multiprocessor machines who say Y here should also say
+	  Y to "Enhanced Real Time Clock Support", below.
+
+	  See also the SMP-HOWTO available at
+	  <http://www.tldp.org/docs.html#howto>.
+
+	  If you don't know what to do here, say N.
+
+config HOTPLUG_CPU
+	bool "Support for hot-pluggable CPUs"
+	depends on SMP && SYS_SUPPORTS_HOTPLUG_CPU
+	help
+	  Say Y here to allow turning CPUs off and on. CPUs can be
+	  controlled through /sys/devices/system/cpu.
+	  (Note: power management support will enable this option
+	    automatically on SMP systems. )
+	  Say N if you want to disable CPU hotplug.
+
+config SYS_SUPPORTS_SMP
+	bool
+
+config NR_CPUS_DEFAULT_4
+	bool
+
+config NR_CPUS_DEFAULT_8
+	bool
+
+config NR_CPUS_DEFAULT_16
+	bool
+
+config NR_CPUS_DEFAULT_32
+	bool
+
+config NR_CPUS_DEFAULT_64
+	bool
+
+config NR_CPUS
+	int "Maximum number of CPUs (2-256)"
+	range 2 256
+	depends on SMP
+	default "4" if NR_CPUS_DEFAULT_4
+	default "8" if NR_CPUS_DEFAULT_8
+	default "16" if NR_CPUS_DEFAULT_16
+	default "32" if NR_CPUS_DEFAULT_32
+	default "64" if NR_CPUS_DEFAULT_64
+	help
+	  This allows you to specify the maximum number of CPUs which this
+	  kernel will support.  The maximum supported value is 32 for 32-bit
+	  kernel and 64 for 64-bit kernels; the minimum value which makes
+	  sense is 1 for Qemu (useful only for kernel debugging purposes)
+	  and 2 for all others.
+
+	  This is purely to save memory - each supported CPU adds
+	  approximately eight kilobytes to the kernel image.  For best
+	  performance should round up your number of processors to the next
+	  power of two.
+
+source "kernel/Kconfig.hz"
+
+config SECCOMP
+	bool "Enable seccomp to safely compute untrusted bytecode"
+	depends on PROC_FS
+	default y
+	help
+	  This kernel feature is useful for number crunching applications
+	  that may need to compute untrusted bytecode during their
+	  execution. By using pipes or other transports made available to
+	  the process as file descriptors supporting the read/write
+	  syscalls, it's possible to isolate those applications in
+	  their own address space using seccomp. Once seccomp is
+	  enabled via /proc/<pid>/seccomp, it cannot be disabled
+	  and the task is only allowed to execute a few safe syscalls
+	  defined by each seccomp mode.
+	  If unsure, say Y. Only embedded should say N here.
+#if 32bit
+config BUILTIN_DTB
+        bool "Enable builtin dtb in kernel"
+        depends on MACH_LOONGSON32
+        default y
+        help
+          Enable builtin dtb in kernel, If the firmware does not provide
+          an available DTB, this will be used.
+
+config BUILTIN_DTB_NAME
+        string "Built in DTB"
+        depends on BUILTIN_DTB
+        default "loongson32_ls"
+        help
+          Set the name of the DTB to embed in the vmlinux binary
+#if 32bit end
+
+endmenu
+config ARCH_ENABLE_MEMORY_HOTPLUG
+	def_bool y
+	depends on LOONGARCH
+
+config ARCH_ENABLE_MEMORY_HOTREMOVE
+	def_bool y
+	depends on MEMORY_HOTPLUG
+
+config ARCH_MEMORY_PROBE
+	def_bool y
+	depends on MEMORY_HOTPLUG
+
+config HAVE_ARCH_NODEDATA_EXTENSION
+	def_bool y
+	depends on NUMA && ARCH_ENABLE_MEMORY_HOTPLUG
+
+config LOCKDEP_SUPPORT
+	bool
+	default y
+
+config PGTABLE_LEVELS
+	int
+	default 4 if PAGE_SIZE_4KB && VA_BITS_48
+	default 2 if PAGE_SIZE_64KB && VA_BITS_40
+	default 2 if PAGE_SIZE_4KB
+	default 3
+
+config MMU
+	bool
+	default y
+
+config ARCH_MMAP_RND_BITS_MIN
+	default 12 if 64BIT
+	default 8
+
+config ARCH_MMAP_RND_BITS_MAX
+	default 18 if 64BIT
+	default 15
+
+config ZONE_DMA
+	bool
+
+config ZONE_DMA32
+	bool
+
+menu "Bus options"
+
+config PCI_MMCONFIG
+	bool
+	default y
+	depends on PCI && ACPI
+
+endmenu
+
+menu "Power management options"
+
+source "drivers/acpi/Kconfig"
+
+endmenu
+
+source "drivers/firmware/Kconfig"
