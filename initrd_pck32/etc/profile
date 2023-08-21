@@ -1,7 +1,19 @@
-# /etc/profile: system-wide .profile file for the Bourne shells
+export PATH="/bin:/sbin:/usr/bin:/usr/sbin"
 
-echo
-echo -n "Processing /etc/profile... "
-# no-op
-echo "Done"
-echo
+if [ "$PS1" ]; then
+	if [ "`id -u`" -eq 0 ]; then
+		export PS1='# '
+	else
+		export PS1='$ '
+	fi
+fi
+
+export EDITOR='/bin/vi'
+
+# Source configuration files from /etc/profile.d
+for i in /etc/profile.d/*.sh ; do
+	if [ -r "$i" ]; then
+		. $i
+	fi
+done
+unset i
